@@ -1,0 +1,23 @@
+# Ignore build files and directories
+build/
+dist/
+
+# Ignore configuration files
+.prettierrc
+.eslintrc.cjs
+babel.config.js
+webpack.config.js
+
+# Ignore Node.js specific files and directories
+node_modules/
+package-lock.json
+yarn.lock
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+*.sublime-*
+*.vsproj
+*.sln
+*.swp
+.DS_Store
