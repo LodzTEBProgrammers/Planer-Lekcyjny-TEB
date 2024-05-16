@@ -1,0 +1,6 @@
+@Planer_Lekcyjny_TEB.Server_HostAddress = http://localhost:5083
+
+GET {{Planer_Lekcyjny_TEB.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
