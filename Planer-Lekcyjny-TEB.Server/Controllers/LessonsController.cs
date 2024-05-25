@@ -14,6 +14,15 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             // Load XML document
             XDocument doc = XDocument.Load("DummyData/Plan.xml");
 
+            // Parse classrooms
+            var classRooms = doc.Descendants("classroom")
+                .Select(c => new Classroom
+                {
+                    Id = (string)c.Attribute("id"),
+                    Name = (string)c.Attribute("name"),
+                })
+                .ToList();
+
             // Parse subjects
             var subjects = doc.Descendants("subject")
                 .Select(s => new Subject
@@ -38,19 +47,23 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 .Select(l => new Lesson
                 {
                     Id = (string)l.Attribute("id"),
-                    ClassIds = (string)l.Attribute("classids"),
+                    ClassRoomNames = ((string)l.Attribute("classroomids")).Split(',')
+                                                .Select(id => classRooms.FirstOrDefault(c => c.Id == id)?.Name)
+                                                .Where(name => name != null)
+                                                .ToList(),
+
                     SubjectName = subjects.Where(s => s.Id == (string)l.Attribute("subjectid"))
-                        .Select(s => s.Name)
-                        .FirstOrDefault(),
+                                            .Select(s => s.Name)
+                                            .FirstOrDefault(),
+
                     PeriodsPerCard = (int)l.Attribute("periodspercard"),
                     PeriodsPerWeek = (double)l.Attribute("periodsperweek"),
                     TeacherIds = (string)l.Attribute("teacherids"),
                     TeacherName = teachers.Where(t => t.Id == (string)l.Attribute("teacherids"))
                                             .Select(t => $"{t.FirstName} {t.LastName}")
                                             .FirstOrDefault(),
-                    ClassroomIds = (string)l.Attribute("classroomids"),
+
                     GroupIds = (string)l.Attribute("groupids"),
-                    Capacity = (string)l.Attribute("capacity"),
                     SeminarGroup = (string)l.Attribute("seminargroup"),
                     TermsDefId = (string)l.Attribute("termsdefid"),
                     WeeksDefId = (string)l.Attribute("weeksdefid"),
