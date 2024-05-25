@@ -14,7 +14,16 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             // Load XML document
             XDocument doc = XDocument.Load("DummyData/Plan.xml");
 
-            // Parse classrooms
+            // Parse classes
+            var classIds = doc.Descendants("class")
+                .Select(c => new Class
+                {
+                    Id = (string)c.Attribute("id"),
+                    Name = (string)c.Attribute("name"),
+                })
+                .ToList();
+
+            // Parse classroom
             var classRooms = doc.Descendants("classroom")
                 .Select(c => new Classroom
                 {
@@ -47,15 +56,19 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 .Select(l => new Lesson
                 {
                     Id = (string)l.Attribute("id"),
+
+                    ClassName = classIds.Where(c => c.Id == (string)l.Attribute("classids"))
+                                        .Select(c => c.Name)
+                                        .FirstOrDefault(),
+
+                    SubjectName = subjects.Where(s => s.Id == (string)l.Attribute("subjectid"))
+                        .Select(s => s.Name)
+                        .FirstOrDefault(),
+
                     ClassRoomNames = ((string)l.Attribute("classroomids")).Split(',')
                                                 .Select(id => classRooms.FirstOrDefault(c => c.Id == id)?.Name)
                                                 .Where(name => name != null)
                                                 .ToList(),
-
-                    SubjectName = subjects.Where(s => s.Id == (string)l.Attribute("subjectid"))
-                                            .Select(s => s.Name)
-                                            .FirstOrDefault(),
-
                     PeriodsPerCard = (int)l.Attribute("periodspercard"),
                     PeriodsPerWeek = (double)l.Attribute("periodsperweek"),
                     TeacherIds = (string)l.Attribute("teacherids"),
@@ -68,7 +81,6 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                     TermsDefId = (string)l.Attribute("termsdefid"),
                     WeeksDefId = (string)l.Attribute("weeksdefid"),
                     DaysDefId = (string)l.Attribute("daysdefid"),
-                    PartnerId = (string)l.Attribute("partner_id")
                 })
                 .ToList();
 
