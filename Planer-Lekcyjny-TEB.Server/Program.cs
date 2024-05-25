@@ -1,7 +1,12 @@
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Register the CodePagesEncodingProvider to enable the use of Windows-1250 encoding for Polish characters
+// IN XML File
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+// Add services to the container.
 builder.Services.AddControllers().AddXmlSerializerFormatters();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

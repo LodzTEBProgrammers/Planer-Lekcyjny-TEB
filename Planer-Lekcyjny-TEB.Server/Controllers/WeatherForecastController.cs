@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Planer_Lekcyjny_TEB.Server.Classes;
 
 namespace Planer_Lekcyjny_TEB.Server.Controllers
 {

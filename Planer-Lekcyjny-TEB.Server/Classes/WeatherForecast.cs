@@ -1,4 +1,4 @@
-namespace Planer_Lekcyjny_TEB.Server
+namespace Planer_Lekcyjny_TEB.Server.Classes
 {
     public class WeatherForecast
     {
