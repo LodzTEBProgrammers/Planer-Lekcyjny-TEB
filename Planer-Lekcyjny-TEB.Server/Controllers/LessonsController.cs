@@ -14,6 +14,15 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             // Load XML document
             XDocument doc = XDocument.Load("DummyData/Plan.xml");
 
+            // Parse subjects
+            var subjects = doc.Descendants("subject")
+                .Select(s => new Subject
+                {
+                    Id = (string)s.Attribute("id"),
+                    Name = (string)s.Attribute("name"),
+                })
+                .ToList();
+
             // Parse teachers
             var teachers = doc.Descendants("teacher")
                 .Select(t => new Teacher
@@ -21,13 +30,6 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                     Id = (string)t.Attribute("id"),
                     FirstName = (string)t.Attribute("firstname"),
                     LastName = (string)t.Attribute("lastname"),
-                    Name = (string)t.Attribute("name"),
-                    Short = (string)t.Attribute("short"),
-                    Gender = (string)t.Attribute("gender"),
-                    Color = (string)t.Attribute("color"),
-                    Email = (string)t.Attribute("email"),
-                    Mobile = (string)t.Attribute("mobile"),
-                    PartnerId = (string)t.Attribute("partner_id")
                 })
                 .ToList();
 
@@ -37,7 +39,9 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 {
                     Id = (string)l.Attribute("id"),
                     ClassIds = (string)l.Attribute("classids"),
-                    SubjectId = (string)l.Attribute("subjectid"),
+                    SubjectName = subjects.Where(s => s.Id == (string)l.Attribute("subjectid"))
+                        .Select(s => s.Name)
+                        .FirstOrDefault(),
                     PeriodsPerCard = (int)l.Attribute("periodspercard"),
                     PeriodsPerWeek = (double)l.Attribute("periodsperweek"),
                     TeacherIds = (string)l.Attribute("teacherids"),

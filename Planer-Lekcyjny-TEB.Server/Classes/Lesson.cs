@@ -4,7 +4,7 @@
     {
         public string Id { get; set; }
         public string ClassIds { get; set; }
-        public string SubjectId { get; set; }
+        public string SubjectName { get; set; }
         public int PeriodsPerCard { get; set; }
         public double PeriodsPerWeek { get; set; }
         public string TeacherIds { get; set; }
