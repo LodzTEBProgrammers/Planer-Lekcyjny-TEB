@@ -8,6 +8,7 @@
         public int PeriodsPerCard { get; set; }
         public double PeriodsPerWeek { get; set; }
         public string TeacherIds { get; set; }
+        public string TeacherName { get; set; }
         public string ClassroomIds { get; set; }
         public string GroupIds { get; set; }
         public string Capacity { get; set; }
