@@ -29,5 +29,28 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             })
             .ToArray();
         }
+
+        // Wysyla ID do naszego serwera baz danych,
+        // ktory zwraca nam osobe o danym ID
+        [HttpGet("user/{id}")]
+        public string GetCos(int id)
+        {
+            string[] users = ["Jan", "Krzysztof", "Marek", "Kamil", "Kacper"];
+
+            if (id > 0 && id < users.Length + 1)
+            {
+                return $"Wywolano osobe o imieniu: {users[id - 1]}";
+
+            }
+            return "Nie ma takiej osoby";
+        }
+
+        [HttpPost("/set/{name}")]
+        public string SetName(string name)
+        {
+            _logger.LogInformation($"Ustawiono imie na: {name}");
+
+            return $"Ustawiono imie na: {name}";
+        }
     }
 }
