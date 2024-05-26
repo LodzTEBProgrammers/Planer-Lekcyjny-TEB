@@ -29,6 +29,11 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             var classrooms = doc.Descendants("classroom")
                 .ToDictionary(c => (string)c.Attribute("id"), c => (string)c.Attribute("name"));
 
+            // Parse periods
+            var periods = doc.Descendants("period")
+                .ToDictionary(p => (int)p.Attribute("period"), p => new { StartTime = (string)p.Attribute("starttime"), EndTime = (string)p.Attribute("endtime") });
+
+
             // Parse cards
             var cards = doc.Descendants("card")
                 .Select(c => new Card
@@ -40,6 +45,8 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                         : classrooms.ContainsKey((string)c.Attribute("classroomids"))
                             ? classrooms[(string)c.Attribute("classroomids")]
                             : null,
+                    StartTime = periods.ContainsKey((int)c.Attribute("period")) ? periods[(int)c.Attribute("period")].StartTime : null,
+                    EndTime = periods.ContainsKey((int)c.Attribute("period")) ? periods[(int)c.Attribute("period")].EndTime : null,
                     Period = (int)c.Attribute("period"),
                     Weeks = (int)c.Attribute("weeks"),
                     Terms = (int)c.Attribute("terms"),
