@@ -1,6 +1,10 @@
+using Planer_Lekcyjny_TEB.Server.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddScoped<LessonService>();
 
 // Register the CodePagesEncodingProvider to enable the use of Windows-1250 encoding for Polish characters
 // IN XML File
