@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <timetable ascttversion="2021.3.1" importtype="database" options="export:idprefix:%CHRID,import:idprefix:%TEMPID,groupstype1,decimalseparatordot,lessonsincludeclasseswithoutstudents,handlestudentsafterlessons" defaultexport="1" displayname="aSc Timetables 2012 XML" displaycountries="">
    <periods options="canadd,export:silent" columns="period,name,short,starttime,endtime">
-      <period name="0" short="0" period="0" starttime="7:10" endtime="7:55"/>
-      <period name="1" short="1" period="1" starttime="8:00" endtime="8:45"/>
-      <period name="2" short="2" period="2" starttime="9:00" endtime="9:45"/>
+      <period name="0" short="0" period="0" starttime="7:25" endtime="8:10"/>
+      <period name="1" short="1" period="1" starttime="8:15" endtime="9:00"/>
+      <period name="2" short="2" period="2" starttime="9:05" endtime="9:50"/>
       <period name="3" short="3" period="3" starttime="10:00" endtime="10:45"/>
-      <period name="4" short="4" period="4" starttime="11:00" endtime="11:45"/>
-      <period name="5" short="5" period="5" starttime="12:00" endtime="12:45"/>
-      <period name="6" short="6" period="6" starttime="13:00" endtime="13:45"/>
-      <period name="7" short="7" period="7" starttime="14:00" endtime="14:45"/>
-      <period name="8" short="8" period="8" starttime="15:00" endtime="15:45"/>
-      <period name="9" short="9" period="9" starttime="16:00" endtime="16:45"/>
-      <period name="10" short="10" period="10" starttime="17:00" endtime="17:45"/>
-      <period name="11" short="11" period="11" starttime="18:00" endtime="18:45"/>
+      <period name="4" short="4" period="4" starttime="10:55" endtime="11:40"/>
+      <period name="5" short="5" period="5" starttime="11:50" endtime="12:35"/>
+      <period name="6" short="6" period="6" starttime="12:50" endtime="13:35"/>
+      <period name="7" short="7" period="7" starttime="13:45" endtime="14:30"/>
+      <period name="8" short="8" period="8" starttime="14:35" endtime="15:20"/>
+      <period name="9" short="9" period="9" starttime="15:25" endtime="16:10"/>
+      <period name="10" short="10" period="10" starttime="16:15" endtime="17:00"/>
+      <period name="11" short="11" period="11" starttime="17:05" endtime="17:50"/>
    </periods>
    <daysdefs options="canadd,export:silent" columns="id,days,name,short">
       <daysdef id="BCD847B1DCC5441F" name="Dowolny dzień" short="X" days="10000,01000,00100,00010,00001"/>
