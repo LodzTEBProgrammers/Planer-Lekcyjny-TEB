@@ -33,6 +33,7 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             var cards = doc.Descendants("card")
                 .Select(c => new Card
                 {
+                    Class = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Class,
                     Lesson = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Subject,
                     Classroom = string.IsNullOrEmpty((string)c.Attribute("classroomids"))
                         ? null
