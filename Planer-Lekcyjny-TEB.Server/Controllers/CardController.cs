@@ -40,6 +40,7 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 {
                     Class = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Class,
                     Lesson = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Subject,
+                    Teacher = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Teacher,
                     Classroom = string.IsNullOrEmpty((string)c.Attribute("classroomids"))
                         ? null
                         : classrooms.ContainsKey((string)c.Attribute("classroomids"))
@@ -47,10 +48,6 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                             : null,
                     StartTime = periods.ContainsKey((int)c.Attribute("period")) ? periods[(int)c.Attribute("period")].StartTime : null,
                     EndTime = periods.ContainsKey((int)c.Attribute("period")) ? periods[(int)c.Attribute("period")].EndTime : null,
-                    Period = (int)c.Attribute("period"),
-                    Weeks = (int)c.Attribute("weeks"),
-                    Terms = (int)c.Attribute("terms"),
-                    Days = (int)c.Attribute("days"),
                 })
                 .ToList();
 
