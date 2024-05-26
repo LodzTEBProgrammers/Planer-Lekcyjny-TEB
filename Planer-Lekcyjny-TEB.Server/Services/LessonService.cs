@@ -19,14 +19,9 @@ namespace Planer_Lekcyjny_TEB.Server.Services
                 })
                 .ToList();
 
-            // Parse classroom
-            var classRooms = doc.Descendants("classroom")
-                .Select(c => new Classroom
-                {
-                    Id = (string)c.Attribute("id"),
-                    Name = (string)c.Attribute("name"),
-                })
-                .ToList();
+            // Parse classrooms
+            var classrooms = doc.Descendants("classroom")
+                    .ToDictionary(c => (string)c.Attribute("id"), c => (string)c.Attribute("name"));
 
             // Parse subjects
             var subjects = doc.Descendants("subject")
@@ -72,7 +67,7 @@ namespace Planer_Lekcyjny_TEB.Server.Services
                         .FirstOrDefault(),
 
                     Classroom = ((string)l.Attribute("classroomids")).Split(',')
-                        .Select(id => classRooms.FirstOrDefault(c => c.Id == id)?.Name)
+                        .Select(id => classrooms.ContainsKey(id) ? classrooms[id] : null)
                         .Where(name => name != null)
                         .ToList(),
                     PeriodsPerCard = (int)l.Attribute("periodspercard"),

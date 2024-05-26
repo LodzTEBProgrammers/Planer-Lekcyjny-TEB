@@ -25,12 +25,20 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             // Get lessons
             var lessons = _lessonService.GetLessons();
 
+            // Parse classrooms
+            var classrooms = doc.Descendants("classroom")
+                .ToDictionary(c => (string)c.Attribute("id"), c => (string)c.Attribute("name"));
+
             // Parse cards
             var cards = doc.Descendants("card")
                 .Select(c => new Card
                 {
-                    LessonName = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Subject,
-                    ClassroomIds = (string)c.Attribute("classroomids"),
+                    Lesson = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Subject,
+                    Classroom = string.IsNullOrEmpty((string)c.Attribute("classroomids"))
+                        ? null
+                        : classrooms.ContainsKey((string)c.Attribute("classroomids"))
+                            ? classrooms[(string)c.Attribute("classroomids")]
+                            : null,
                     Period = (int)c.Attribute("period"),
                     Weeks = (int)c.Attribute("weeks"),
                     Terms = (int)c.Attribute("terms"),
