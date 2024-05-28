@@ -46,16 +46,31 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             // Get the current time
             var now = DateTime.Now.TimeOfDay;
 
+            // Parse days
+            var days = doc.Descendants("daysdef")
+                .ToDictionary(d => (string)d.Attribute("days"), d => (string)d.Attribute("name"));
+
+            // Get the current day of the week
+            var currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
+
+            // Get the current day string
+            var currentDayString = new string('0', currentDayOfWeek - 1) + "1" + new string('0', 5 - currentDayOfWeek);
+
+            // Get the current day name
+            var currentDayName = days.ContainsKey(currentDayString) ? days[currentDayString] : null;
+
+
             // Find the current or next period
             var currentOrNextPeriod = periods.FirstOrDefault(p => p.StartTime <= now && p.EndTime > now)
                                       ?? periods.FirstOrDefault(p => p.StartTime > now);
 
-            // If there is a next lesson 
+            // If there is a current or next lesson 
             if (currentOrNextPeriod != null)
             {
-                // Get the next cards
-                var nextCards = doc.Descendants("card")
-                    .Where(c => (int)c.Attribute("period") == currentOrNextPeriod.PeriodNumber)
+                // Get the current or next cards
+                var currentOrNextCards = doc.Descendants("card")
+                    .Where(c => (int)c.Attribute("period") == currentOrNextPeriod.PeriodNumber &&
+                                ((string)c.Attribute("days")).Substring(currentDayOfWeek - 1, 1) == "1")
                     .Select(c => new Card
                     {
                         Class = lessons.FirstOrDefault(l => l.Id == (string)c.Attribute("lessonid"))?.Class,
@@ -67,11 +82,12 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                                 ? classrooms[(string)c.Attribute("classroomids")]
                                 : null,
                         StartTime = currentOrNextPeriod.StartTime.ToString(),
-                        EndTime = currentOrNextPeriod.EndTime.ToString()
+                        EndTime = currentOrNextPeriod.EndTime.ToString(),
+                        Day = currentDayName
                     })
                     .ToList();
 
-                return Ok(nextCards);
+                return Ok(currentOrNextCards);
             }
             else
             {
