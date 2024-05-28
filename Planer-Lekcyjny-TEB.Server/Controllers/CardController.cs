@@ -85,6 +85,7 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                         EndTime = currentOrNextPeriod.EndTime.ToString(),
                         Day = currentDayName
                     })
+                    .OrderBy(c => c.Class) // Sort by class
                     .ToList();
 
                 return Ok(currentOrNextCards);
