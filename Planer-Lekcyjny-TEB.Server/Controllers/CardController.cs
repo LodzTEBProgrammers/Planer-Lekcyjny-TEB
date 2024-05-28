@@ -51,7 +51,13 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 })
                 .ToList();
 
-            return Ok(cards);
+            var currentTime = DateTime.Now;
+
+            var currentCards = cards
+                .Where(c => DateTime.Parse(c.StartTime) <= currentTime && DateTime.Parse(c.EndTime) >= currentTime)
+                .ToList();
+
+            return Ok(currentCards);
         }
     }
 }
