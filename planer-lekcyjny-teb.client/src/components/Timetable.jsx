@@ -48,16 +48,16 @@ function Timetable() {
 					<th>Sala</th>
 				</tr>
 				</thead>
-				<tbody>
-				{timetable.map((lesson, index) => (
-					<tr key={index} className="timetable-row">
-						<td>{lesson.lesson}</td>
-						<td>{lesson.class}</td>
-						<td>{lesson.teacher}</td>
-						<td>{lesson.classroom}</td>
-					</tr>
-				))}
-				</tbody>
+				 <tbody>
+                {Array.isArray(timetable) ? timetable.map((lesson, index) => (
+                    <tr key={index} className="timetable-row">
+                        <td>{lesson.lesson}</td>
+                        <td>{lesson.class}</td>
+                        <td>{lesson.teacher}</td>
+                        <td>{lesson.classroom}</td>
+                    </tr>
+                )) : <tr><td colSpan="4"><span className='end-lessons-message'>{timetable?.message}</span></td></tr>}
+                </tbody>
 			</table>
 		</div>
 	);

@@ -56,6 +56,7 @@ function App() {
         <span className="item-holder">
           <a href="/">Home</a>
           <a href="/admin">Admin</a>
+          <a href="/plan-lekcji">Plan Lekcji</a>
           <span onClick={logout}>Log Out</span>
         </span> :
         <span className="item-holder">

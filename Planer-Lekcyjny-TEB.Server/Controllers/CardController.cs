@@ -122,6 +122,12 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                     .Where(c => DateTime.Parse(c.StartTime) <= currentTime && DateTime.Parse(c.EndTime) >= currentTime)
                     .ToList();
 
+                // If there are no current cards, return a message
+                if (!currentCards.Any())
+                {
+                    return Ok(new { message = "Wszystkie lekcje zakończyły się!" });
+                }
+
                 return Ok(currentCards);
             }
         }
