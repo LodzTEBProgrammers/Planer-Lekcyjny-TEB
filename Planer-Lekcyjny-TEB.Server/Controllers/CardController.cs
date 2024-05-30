@@ -125,7 +125,7 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 // If there are no current cards, return a message
                 if (!currentCards.Any())
                 {
-                    return Ok(new { message = "Wszystkie lekcje zakończyły się!" });
+                    return Ok(new { message = "Wszystkie lekcje na dzisiaj zakończyły się!" });
                 }
 
                 return Ok(currentCards);
