@@ -1,0 +1,44 @@
+.timetable-container {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.timetable-title {
+    font-size: 2em;
+    text-align: center;
+    color: #333;
+}
+
+.timetable-subtitle {
+    color: #222;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.time {
+    color: #2244cc;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.day {
+    color: #cc2244;
+    font-weight: bold;
+    text-decoration: underline;
+
+}
+.timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.timetable-table thead th {
+    border-bottom: 2px solid #333;
+    padding: 10px;
+    text-align: left;
+}
+
+.timetable-table tbody .timetable-row td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
