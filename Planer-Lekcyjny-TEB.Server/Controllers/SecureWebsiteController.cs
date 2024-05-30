@@ -95,19 +95,8 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             return Ok(new { message = "You are free to go!" });
         }
 
-        [HttpGet("admin"), Authorize]
-        public ActionResult AdminPage()
-        {
-            string[] partners =
-            {
-                "Raja", "Bill Gates", "Elon Musk", "Taylor Swift", "Jeff Bezoss",
-                "Mark Zuckerberg", "Oprah Winfrey", "Kanye West", "Kim Kardashian", "Kylie Jenner"
-            };
-            return Ok(new { trustedPartners = partners });
-        }
-
         // Adding new annoucement to the database
-        [HttpPost("admin/announcement"), Authorize]
+        [HttpPost("admin/announcement")]
         public async Task<ActionResult<Announcement>> PostAnnouncement(Announcement announcement)
         {
             try
@@ -121,7 +110,6 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
                 return BadRequest(new
                 {
                     message = "An error occurred while trying to save the announcement: " + ex.Message
-                    + "Dogłebne znaczenie erroru: " + ex.InnerException.Message
                 });
             }
 

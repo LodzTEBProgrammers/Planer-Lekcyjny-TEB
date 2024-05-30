@@ -72,8 +72,6 @@ function Login() {
 
 		if (response.ok) {
 			localStorage.setItem("user", dataToSend.Email);
-			localStorage.setItem("token", data.token); // store the token
-			console.log('Stored token:', data.token); // log the stored token
 			document.location = "/";
 		}
 
