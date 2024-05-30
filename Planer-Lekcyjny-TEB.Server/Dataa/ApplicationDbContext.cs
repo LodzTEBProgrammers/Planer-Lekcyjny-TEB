@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Planer_Lekcyjny_TEB.Server.Classes;
 using Planer_Lekcyjny_TEB.Server.Models;
 
 namespace Planer_Lekcyjny_TEB.Server.Dataa
@@ -9,5 +10,7 @@ namespace Planer_Lekcyjny_TEB.Server.Dataa
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Announcement> Announcements { get; set; }
     }
 }
