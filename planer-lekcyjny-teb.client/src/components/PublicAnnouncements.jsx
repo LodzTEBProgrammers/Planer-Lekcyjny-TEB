@@ -25,15 +25,24 @@ function PublicAnnouncements() {
 				<div>
 					<h1>Ogłoszenia:</h1>
 					<ul>
-						{announcements.map((announcement) => {
-							const date = new Date(announcement.date);
-							const day = date.toLocaleDateString();
+						{announcements
+							.sort((a, b) => new Date(b.date) - new Date(a.date)).map((announcement) => {
+							const announcementDate = new Date(announcement.date);
+							const today = new Date();
+
+							// Check if the announcement date is the same as today's date
+							const isToday = announcementDate.getDate() === today.getDate() &&
+								announcementDate.getMonth() === today.getMonth() &&
+								announcementDate.getFullYear() === today.getFullYear();
+
+							const day = announcementDate.toLocaleDateString();
 
 							return (
 								<li key={announcement.id}>
 									<div style={{ border: '1px solid black', padding: '10px', margin: '10px' }}>
-										{announcement.content } - <span style={{ color: 'red', fontWeight: 'bold' }}>{day} </span>
-										{ date.toLocaleTimeString()}
+										{announcement.content } -
+										<span style={{ color: isToday ? 'red' : 'black', fontWeight: 'bold' }}> {day} </span>
+										{ announcementDate.toLocaleTimeString()}
 									</div>
 								</li>
 							);
@@ -44,5 +53,6 @@ function PublicAnnouncements() {
 		</section>
 	);
 }
+
 
 export default PublicAnnouncements;
