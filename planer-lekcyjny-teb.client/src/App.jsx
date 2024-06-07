@@ -6,6 +6,7 @@ import Admin from "@/components/Admin.jsx"
 import Login from "@/components/Login.jsx"
 import Register from "@/components/Register.jsx"
 import Timetable from "@/components/Timetable"
+import PublicAnnouncements from "@/components/PublicAnnouncements"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/plan-lekcji' element={<Timetable />} />
+      <Route path='/ogloszenia' element={<PublicAnnouncements/>} />
       <Route path='*' element={
         <div>
           <header>
@@ -59,12 +61,13 @@ function App() {
           <a href="/plan-lekcji">Plan Lekcji</a>
           <span onClick={logout}>Log Out</span>
         </span> :
-        <span className="item-holder">
+          <span className="item-holder">
           <a href="/login">Login</a>
           <a href="/register">Register</a>
           <a href="/plan-lekcji">Plan Lekcji</a>
+          <a href="/ogloszenia">Ogłoszenia</a>
         </span>
-      }
+        }
       </div>
         <RouterProvider router={router}/>
         

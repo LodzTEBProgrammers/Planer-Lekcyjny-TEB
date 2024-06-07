@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Planer_Lekcyjny_TEB.Server.Classes;
+using Planer_Lekcyjny_TEB.Server.Dataa;
 using Planer_Lekcyjny_TEB.Server.Models;
 using System.Security.Claims;
 
@@ -8,7 +11,7 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SecureWebsiteController(SignInManager<User> sm, UserManager<User> um) : ControllerBase
+    public class SecureWebsiteController(ApplicationDbContext context, SignInManager<User> sm, UserManager<User> um) : ControllerBase
     {
         private readonly SignInManager<User> signInManager = sm;
         private readonly UserManager<User> userManager = um;
@@ -92,15 +95,44 @@ namespace Planer_Lekcyjny_TEB.Server.Controllers
             return Ok(new { message = "You are free to go!" });
         }
 
-        [HttpGet("admin"), Authorize]
-        public ActionResult AdminPage()
+        // Adding new annoucement to the database
+        [HttpPost("admin/announcement")]
+        public async Task<ActionResult<Announcement>> PostAnnouncement(Announcement announcement)
         {
-            string[] partners =
+            try
             {
-                "Raja", "Bill Gates", "Elon Musk", "Taylor Swift", "Jeff Bezoss",
-                "Mark Zuckerberg", "Oprah Winfrey", "Kanye West", "Kim Kardashian", "Kylie Jenner"
-            };
-            return Ok(new { trustedPartners = partners });
+                context.Announcements.Add(announcement);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception message to your logging framework
+                return BadRequest(new
+                {
+                    message = "An error occurred while trying to save the announcement: " + ex.Message
+                });
+            }
+
+            return CreatedAtAction(nameof(GetAnnouncement), new { id = announcement.Id }, announcement);
+        }
+
+        [HttpGet("admin/announcement/{id}")]
+        public async Task<ActionResult<Announcement>> GetAnnouncement(int id)
+        {
+            var announcement = await context.Announcements.FindAsync(id);
+
+            if (announcement == null)
+            {
+                return NotFound();
+            }
+
+            return announcement;
+        }
+
+        [HttpGet("admin/announcement")]
+        public async Task<ActionResult<IEnumerable<Announcement>>> GetAnnouncements()
+        {
+            return await context.Announcements.ToListAsync();
         }
 
         [HttpGet("home/{email}"), Authorize]
