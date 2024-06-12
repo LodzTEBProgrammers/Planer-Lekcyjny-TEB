@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from 'react'
 
 const AnnouncementContext = createContext(undefined)
 
@@ -7,23 +7,28 @@ export const AnnouncementsProvider = ({ children }) => {
 
 	const getAnnouncements = async () => {
 		try {
-			const response = await fetch("http://localhost:5083/api/SecureWebsite/admin/announcement", { method: "GET" })
+			const response = await fetch('http://localhost:5083/api/SecureWebsite/admin/announcement', { method: 'GET' })
 			setAnnouncements(await response.json())
 		} catch (error) {
-			console.error(error)
+			throw new Error('Error ', error)
 		}
 	}
 
-	const addAnnouncement = (announcement) => {
-		if (announcement.content !== "")
-			fetch("http://localhost:5083/api/SecureWebsite/admin/announcement", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-				},
-				body: JSON.stringify({ content: announcement.content }),
-			})
+	const addAnnouncement = ({ content }) => {
+		if (content) {
+			try {
+				fetch('http://localhost:5083/api/SecureWebsite/admin/announcement', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ content: content }),
+				})
+				getAnnouncements()
+			} catch (error) {
+				throw new Error('Error ', error)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -35,6 +40,6 @@ export const AnnouncementsProvider = ({ children }) => {
 
 export const useAnnouncements = () => {
 	const context = useContext(AnnouncementContext)
-	//   if (!context) throw new Error('useAnnouncement should be wrapped in AnnouncementsProvider');
+	if (!context) throw new Error('useAnnouncement should be wrapped in AnnouncementsProvider')
 	return context
 }
