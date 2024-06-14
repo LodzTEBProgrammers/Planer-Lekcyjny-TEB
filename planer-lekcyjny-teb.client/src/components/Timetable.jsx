@@ -36,7 +36,8 @@ function Timetable() {
 			<h1 className="timetable-title">Plan Lekcji</h1>
 			{selectedLesson && (
 				<h3 className="timetable-subtitle">
-					Lekcje na godzinę [<span className="time">{lessonStartTime} - {lessonEndTime}</span>] w dniu [<span className='day'>{lessonDay}</span>]
+					Lekcje na godzinę [<span className="time">{lessonStartTime} - 
+					{lessonEndTime}</span>] w dniu [<span className='day'>{lessonDay}</span>]
 				</h3>
 			)}
 			<table className="timetable-table">

@@ -6,169 +6,196 @@ using Planer_Lekcyjny_TEB.Server.Classes;
 using Planer_Lekcyjny_TEB.Server.Dataa;
 using Planer_Lekcyjny_TEB.Server.Models;
 using System.Security.Claims;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
-namespace Planer_Lekcyjny_TEB.Server.Controllers
+namespace Planer_Lekcyjny_TEB.Server.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class SecureWebsiteController(
+    ApplicationDbContext context,
+    SignInManager<User> sm,
+    UserManager<User> um) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SecureWebsiteController(ApplicationDbContext context, SignInManager<User> sm, UserManager<User> um) : ControllerBase
+    private readonly SignInManager<User> signInManager = sm;
+    private readonly UserManager<User> userManager = um;
+
+    [HttpPost("register")]
+    public async Task<ActionResult> RegisterUser(User user)
     {
-        private readonly SignInManager<User> signInManager = sm;
-        private readonly UserManager<User> userManager = um;
+        IdentityResult result = new();
 
-        [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser(User user)
+        try
         {
-            IdentityResult result = new();
-
-            try
+            User user_ = new()
             {
-                User user_ = new User()
-                {
-                    Name = user.Name,
-                    Email = user.Email,
-                    UserName = user.UserName,
-                };
+                Name = user.Name,
+                Email = user.Email,
+                UserName = user.UserName
+            };
 
-                result = await userManager.CreateAsync(user_, user.PasswordHash);
+            result = await userManager.CreateAsync(user_, user.PasswordHash);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                message = "Something went wrong, please try again." + ex.Message
+            });
+        }
+
+        return Ok(new { message = "Registered Successfully", result = result });
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> LoginUser(Login login)
+    {
+        string message = "";
+
+        try
+        {
+            User user_ = await userManager.FindByEmailAsync(login.Email);
+
+            if (user_ != null)
+            {
+                login.Username = user_.UserName;
+
+                if (!user_.EmailConfirmed)
+                    user_.EmailConfirmed = true;
+
+                SignInResult? result =
+                    await signInManager.PasswordSignInAsync(user_,
+                        login.Password, login.Remember, false);
 
                 if (!result.Succeeded)
-                    return BadRequest(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Something went wrong, please try again." + ex.Message });
-            }
+                    return Unauthorized(new
+                    {
+                        message = "Check your login credentials and try again"
+                    });
 
-            return Ok(new { message = "Registered Successfully", result = result });
-        }
-
-        [HttpPost("login")]
-        public async Task<ActionResult> LoginUser(Login login)
-        {
-            string message = "";
-
-            try
-            {
-                User user_ = await userManager.FindByEmailAsync(login.Email);
-
-                if (user_ != null)
-                {
-                    login.Username = user_.UserName;
-
-                    if (!user_.EmailConfirmed)
-                        user_.EmailConfirmed = true;
-
-                    var result = await signInManager.PasswordSignInAsync(user_, login.Password, login.Remember, false);
-
-                    if (!result.Succeeded)
-                        return Unauthorized(new { message = "Check your login credentials and try again" });
-
-                    user_.LastLogin = DateTime.UtcNow;
-                    var updateResult = await userManager.UpdateAsync(user_);
-                }
-                else
-                {
-                    return BadRequest(new { message = "Please check your credentials and try again." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Something went wrong, please try again." + ex.Message });
-            }
-
-            return Ok(new { message = "Login Successful! :)" });
-        }
-
-        [HttpGet("logout"), Authorize]
-        public async Task<ActionResult> LogoutUser()
-        {
-            try
-            {
-                await signInManager.SignOutAsync();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Something went wrong, please try again." + ex.Message });
-            }
-
-            return Ok(new { message = "You are free to go!" });
-        }
-
-        // Adding new annoucement to the database
-        [HttpPost("admin/announcement")]
-        public async Task<ActionResult<Announcement>> PostAnnouncement(Announcement announcement)
-        {
-            try
-            {
-                context.Announcements.Add(announcement);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception message to your logging framework
+                user_.LastLogin = DateTime.UtcNow;
+                IdentityResult? updateResult =
+                    await userManager.UpdateAsync(user_);
+            } else
                 return BadRequest(new
                 {
-                    message = "An error occurred while trying to save the announcement: " + ex.Message
+                    message = "Please check your credentials and try again."
                 });
-            }
-
-            return CreatedAtAction(nameof(GetAnnouncement), new { id = announcement.Id }, announcement);
         }
-
-        [HttpGet("admin/announcement/{id}")]
-        public async Task<ActionResult<Announcement>> GetAnnouncement(int id)
+        catch (Exception ex)
         {
-            var announcement = await context.Announcements.FindAsync(id);
-
-            if (announcement == null)
+            return BadRequest(new
             {
-                return NotFound();
-            }
-
-            return announcement;
+                message = "Something went wrong, please try again." + ex.Message
+            });
         }
 
-        [HttpGet("admin/announcement")]
-        public async Task<ActionResult<IEnumerable<Announcement>>> GetAnnouncements()
+        return Ok(new { message = "Login Successful! :)" });
+    }
+
+    [HttpGet("logout")]
+    [Authorize]
+    public async Task<ActionResult> LogoutUser()
+    {
+        try
         {
-            return await context.Announcements.ToListAsync();
+            await signInManager.SignOutAsync();
         }
-
-        [HttpGet("home/{email}"), Authorize]
-        public async Task<ActionResult> HomePage(string email)
+        catch (Exception ex)
         {
-            User userInfo = await userManager.FindByEmailAsync(email);
-
-            if (userInfo == null)
-                return NotFound(new { message = "User not found." });
-
-            return Ok(new { userInfo = userInfo });
-        }
-
-        [HttpGet("xhtlekd")]
-        public async Task<ActionResult> CheckUser()
-        {
-            User currentUser = new();
-
-            try
+            return BadRequest(new
             {
-                var user_ = HttpContext.User;
-                var principals = new ClaimsPrincipal(user_);
-                var result = signInManager.IsSignedIn(principals);
-
-                // Check if user is signed in
-                if (result)
-                    currentUser = await signInManager.UserManager.GetUserAsync(principals);
-                else
-                    return Forbid();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Something went wrong, please try again." + ex.Message });
-            }
-
-            return Ok(new { message = "Logged in", user = currentUser });
+                message = "Something went wrong, please try again." + ex.Message
+            });
         }
+
+        return Ok(new { message = "You are free to go!" });
+    }
+
+    // Adding new annoucement to the database
+    [HttpPost("admin/announcement")]
+    public async Task<ActionResult<Announcement>> PostAnnouncement(
+        Announcement announcement
+    )
+    {
+        try
+        {
+            context.Announcements.Add(announcement);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log the exception message to your logging framework
+            return BadRequest(new
+            {
+                message =
+                    "An error occurred while trying to save the announcement: " +
+                    ex.Message
+            });
+        }
+
+        return CreatedAtAction(nameof(GetAnnouncement),
+            new { id = announcement.Id }, announcement);
+    }
+
+    [HttpGet("admin/announcement/{id}")]
+    public async Task<ActionResult<Announcement>> GetAnnouncement(int id)
+    {
+        Announcement? announcement = await context.Announcements.FindAsync(id);
+
+        if (announcement == null) return NotFound();
+
+        return announcement;
+    }
+
+    [HttpGet("admin/announcement")]
+    public async Task<ActionResult<IEnumerable<Announcement>>>
+        GetAnnouncements()
+    {
+        return await context.Announcements.ToListAsync();
+    }
+
+    [HttpGet("home/{email}")]
+    [Authorize]
+    public async Task<ActionResult> HomePage(string email)
+    {
+        User userInfo = await userManager.FindByEmailAsync(email);
+
+        if (userInfo == null)
+            return NotFound(new { message = "User not found." });
+
+        return Ok(new { userInfo = userInfo });
+    }
+
+    [HttpGet("xhtlekd")]
+    public async Task<ActionResult> CheckUser()
+    {
+        User currentUser = new();
+
+        try
+        {
+            ClaimsPrincipal? user_ = HttpContext.User;
+            ClaimsPrincipal? principals = new ClaimsPrincipal(user_);
+            bool result = signInManager.IsSignedIn(principals);
+
+            // Check if user is signed in
+            if (result)
+                currentUser =
+                    await signInManager.UserManager.GetUserAsync(principals);
+            else
+                return Forbid();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                message = "Something went wrong, please try again." + ex.Message
+            });
+        }
+
+        return Ok(new { message = "Logged in", user = currentUser });
     }
 }

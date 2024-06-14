@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Planer_Lekcyjny_TEB.Server.Dataa;
 using Planer_Lekcyjny_TEB.Server.Models;
 using Planer_Lekcyjny_TEB.Server.Services;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddScoped<LessonService>();
@@ -21,7 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
 });
 
-builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityCore<User>(options =>
 {
@@ -40,7 +42,6 @@ builder.Services.AddIdentityCore<User>(options =>
     options.User.AllowedUserNameCharacters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
-
 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add CORS services
@@ -54,9 +55,24 @@ builder.Services.AddCors(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1",
+        new OpenApiInfo
+            { Title = "Planer-Lekcyjny-TEB.Server", Version = "v1" });
 
-var app = builder.Build();
+    // Filtr ukrywaj¹cy endpointy niezwi¹zane z SecureWebsite i Card
+    options.DocInclusionPredicate((_, apiDesc) =>
+    {
+        // Zwróæ true tylko dla endpointów z kontrolera SecureWebsite i Card
+        return apiDesc.ActionDescriptor.RouteValues.ContainsKey("controller") &&
+            (apiDesc.ActionDescriptor.RouteValues["controller"] ==
+                "SecureWebsite" ||
+                apiDesc.ActionDescriptor.RouteValues["controller"] == "Card");
+    });
+});
+
+WebApplication? app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -70,6 +86,8 @@ if (app.Environment.IsDevelopment()) // lub isProduction
 
 app.UseHttpsRedirection();
 
+
+app.UseAuthentication();
 app.UseCors("AllowMyOrigin"); // Use CORS policy
 
 app.UseAuthorization();
