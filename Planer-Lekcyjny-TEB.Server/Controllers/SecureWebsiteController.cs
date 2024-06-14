@@ -23,6 +23,14 @@ public class SecureWebsiteController(
     [HttpPost("register")]
     public async Task<ActionResult> RegisterUser(User user)
     {
+        // Validate the email domain
+        if (!user.Email.EndsWith("teb.edu.pl"))
+            return BadRequest(new
+            {
+                message =
+                    "Rejestracja możliwa tylko dla kont z domeną teb.edu.pl."
+            });
+
         IdentityResult result = new();
 
         try
@@ -31,7 +39,7 @@ public class SecureWebsiteController(
             {
                 Name = user.Name,
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.Email
             };
 
             result = await userManager.CreateAsync(user_, user.PasswordHash);
@@ -43,16 +51,25 @@ public class SecureWebsiteController(
         {
             return BadRequest(new
             {
-                message = "Something went wrong, please try again." + ex.Message
+                message = "Coś poszło nie tak, spróbuj ponownie." + ex.Message
             });
         }
 
-        return Ok(new { message = "Registered Successfully", result = result });
+        return Ok(new
+            { message = "Rejestracja zakończona sukcesem", result = result });
     }
 
     [HttpPost("login")]
     public async Task<ActionResult> LoginUser(Login login)
     {
+        // Check if the email ends with 'teb.edu.pl'
+        if (!login.Email.EndsWith("teb.edu.pl"))
+            return Unauthorized(new
+            {
+                message =
+                    "Tylko uczniowie TEB (teb.edu.pl) mają dostęp do strony."
+            });
+
         string message = "";
 
         try
@@ -73,7 +90,8 @@ public class SecureWebsiteController(
                 if (!result.Succeeded)
                     return Unauthorized(new
                     {
-                        message = "Check your login credentials and try again"
+                        message =
+                            "Sprawdź swoje dane logowania i spróbuj ponownie"
                     });
 
                 user_.LastLogin = DateTime.UtcNow;
@@ -82,18 +100,18 @@ public class SecureWebsiteController(
             } else
                 return BadRequest(new
                 {
-                    message = "Please check your credentials and try again."
+                    message = "Sprawdź swoje dane logowania i spróbuj ponownie"
                 });
         }
         catch (Exception ex)
         {
             return BadRequest(new
             {
-                message = "Something went wrong, please try again." + ex.Message
+                message = "Coś poszło nie tak, spróbuj ponownie." + ex.Message
             });
         }
 
-        return Ok(new { message = "Login Successful! :)" });
+        return Ok(new { message = "Logowanie pomyślne! :)" });
     }
 
     [HttpGet("logout")]
@@ -108,11 +126,11 @@ public class SecureWebsiteController(
         {
             return BadRequest(new
             {
-                message = "Something went wrong, please try again." + ex.Message
+                message = "Coś poszło nie tak, spróbuj ponownie." + ex.Message
             });
         }
 
-        return Ok(new { message = "You are free to go!" });
+        return Ok(new { message = "Jesteś wolny :D See ya!" });
     }
 
     // Adding new annoucement to the database
@@ -178,7 +196,7 @@ public class SecureWebsiteController(
         try
         {
             ClaimsPrincipal? user_ = HttpContext.User;
-            ClaimsPrincipal? principals = new ClaimsPrincipal(user_);
+            ClaimsPrincipal? principals = new(user_);
             bool result = signInManager.IsSignedIn(principals);
 
             // Check if user is signed in

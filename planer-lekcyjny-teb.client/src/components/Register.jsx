@@ -78,10 +78,10 @@ function Register() {
 		if (data.message) {
 			messageEl.innerHTML = data.message;
 		} else {
-			let errorMessages = "<div>Attention please:</div><div class='normal'>";
-			data.errors.forEach(error => {
-				errorMessages += error.description + " ";
-			});
+			let errorMessages = "<div>Uwaga:</div><div class='normal'>";
+            data.errors.forEach(error => {
+                errorMessages += `- ${error.description}<br/>`;
+            });
 
 			errorMessages += "</div>";
 			messageEl.innerHTML = errorMessages;

@@ -4,6 +4,7 @@ using Planer_Lekcyjny_TEB.Server.Dataa;
 using Planer_Lekcyjny_TEB.Server.Models;
 using Planer_Lekcyjny_TEB.Server.Services;
 using System.Text;
+using Planer_Lekcyjny_TEB.Server.CustomIdentityErrorDescriber;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -25,24 +26,29 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Dostosowanie walidacji has³a
 builder.Services.AddIdentityCore<User>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = true;
-    options.Password.RequireDigit = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 0;
+    {
+        // Password settings.
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Password.RequireDigit = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequiredUniqueChars = 0;
 
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
+        // Lockout settings.
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
 
-    // User settings.
-    options.User.AllowedUserNameCharacters =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<ApplicationDbContext>();
+        // User settings.
+        options.User.AllowedUserNameCharacters =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        options.User.RequireUniqueEmail = true;
+    }).AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddErrorDescriber<
+        CustomIdentityErrorDescriber>(); // Dodaj w³asny opis b³êdów
 
 // Add CORS services
 builder.Services.AddCors(options =>
