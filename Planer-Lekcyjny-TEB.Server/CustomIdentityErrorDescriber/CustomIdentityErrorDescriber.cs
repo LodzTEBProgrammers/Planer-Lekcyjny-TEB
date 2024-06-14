@@ -59,5 +59,27 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         };
     }
 
+    // Nazwa uzytkownika jest juz zajeta 
+    public override IdentityError DuplicateUserName(string userName)
+    {
+        return new IdentityError
+        {
+            Code = nameof(DuplicateUserName),
+            Description =
+                "Nie można zakończyć rejestracji. Sprawdź wprowadzone dane."
+        };
+    }
+
+    // Email jest juz zajety
+    public override IdentityError DuplicateEmail(string email)
+    {
+        return new IdentityError
+        {
+            Code = nameof(DuplicateEmail),
+            Description =
+                $"Email '{email}' jest już zajęty."
+        };
+    }
+
     // Dodaj więcej metod dla innych komunikatów, które chcesz dostosować
 }
