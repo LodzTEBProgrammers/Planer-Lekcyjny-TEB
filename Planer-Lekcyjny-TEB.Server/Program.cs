@@ -71,7 +71,6 @@ if (app.Environment.IsDevelopment()) // lub isProduction
 app.UseHttpsRedirection();
 
 app.UseCors("AllowMyOrigin"); // Use CORS policy
-
 app.UseAuthorization();
 app.MapIdentityApi<User>();
 

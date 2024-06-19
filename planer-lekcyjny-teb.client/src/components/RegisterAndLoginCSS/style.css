@@ -1,0 +1,128 @@
+* {
+	padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+}
+:root {
+	--zielony: #50ad40;
+	--hoverzielony: #54b144;
+	--szary: #ebebeb;
+	--szarydwa: #2d332c;
+	--szaryttrzy: #919191;
+}
+header {
+	width: 31rem;
+	height: 7.8rem;
+	font-size: 1.76rem;
+	font-weight: bold;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--zielony);
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+}
+form {
+	height: 34rem;
+	box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.1);
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	padding: 3.3rem;
+	background-color: white;
+	position: relative;
+}
+.input-div {
+	background-color: var(--szary);
+	margin-bottom: 1rem;
+	width: 100%;
+	height: 3.5rem;
+	border-radius: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+input {
+	width: 80%;
+	height: 100%;
+	border: none;
+	background-color: var(--szary);
+	font-size: 1rem;
+	font-weight: bold;
+	color: var(--szarydwa);
+	outline: none;
+}
+input[type="checkbox"] {
+	width: 1.2rem;
+	height: 1.2rem;
+	appearance: none;
+	-webkit-appearance: none;
+	border-radius: 5px;
+	border: 2px solid var(--zielony);
+	margin: 0 0.5rem 0 0.5rem;
+	cursor: pointer;
+	transition: 0.3s;
+}
+input:focus {
+	color: black;
+	transition: 0.5s;
+}
+input:checked {
+	background-color: var(--zielony);
+}
+input[type="submit"] {
+	height: 3.2rem;
+	width: 100%;
+	background-color: var(--zielony);
+	color: white;
+	border-radius: 40px;
+	margin-top: 0.5rem;
+	cursor: pointer;
+}
+form span {
+	color: var(--zielony);
+}
+.rem-pass {
+	padding: 0rem 0.5rem 1rem 0rem;
+	display: flex;
+	align-items: center;
+	justify-content: end;
+}
+.rem-pass {
+	color: var(--szaryttrzy);
+}
+.register span {
+	color: var(--szaryttrzy);
+	font-size: 1rem;
+	margin-bottom: 0.5rem;
+}
+form a {
+	color: var(--zielony);
+	text-decoration: none;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+.register {
+	position: absolute;
+	top: 80%;
+	left: 50%;
+	transform: translate(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+.message {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2rem;
+}
+.register > a:hover {
+	transform: scale(1.1);
+	transition: 0.3s;
+}
+.login-btn:hover {
+	background-color: var(--hoverzielony);
+	transition: 0.3s;
+}
