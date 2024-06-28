@@ -1,22 +1,13 @@
-import { useEffect } from 'react'
-
-import { useAnnouncements } from '../hooks/useAnnouncements'
+import { useAuth } from '../hooks/useAuth'
 
 const Test = () => {
-  const { announcements, addAnnouncement } = useAnnouncements()
+  const { register } = useAuth()
 
-  useEffect(() => {
-    console.table(announcements)
-  }, [announcements])
   return (
-    <h1
-      onClick={() => {
-        addAnnouncement({ content: 'Test' })
-        console.log('test')
-      }}
-    >
-      chujj
-    </h1>
+    <>
+      <h1 onClick={() => register('test', 'ciapibara@gmail.com', 'chujemujeDzikieW3ze>', 'Ciapibara')}>chujj</h1>
+      <h2>chuj2</h2>
+    </>
   )
 }
 

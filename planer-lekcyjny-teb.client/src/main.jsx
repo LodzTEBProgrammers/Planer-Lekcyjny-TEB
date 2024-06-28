@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { AnnouncementsProvider } from './hooks/useAnnouncements'
+import { AuthProvider } from './hooks/authContext'
 import ErrorPage from './pages/NoPage'
 import Root from './pages/Root'
 import Test from './pages/Test'
@@ -16,11 +16,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'chuj',
+        path: 'chuje',
         element: (
-          <AnnouncementsProvider>
+          <AuthProvider>
             <Test />
-          </AnnouncementsProvider>
+          </AuthProvider>
         ),
       },
     ],

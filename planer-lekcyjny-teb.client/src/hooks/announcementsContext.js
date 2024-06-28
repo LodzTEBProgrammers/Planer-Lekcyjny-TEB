@@ -1,13 +1,17 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 
-const AnnouncementContext = createContext(undefined)
+import { apiUrl } from '../utils/config'
+
+const AnnouncementsContext = createContext(undefined)
 
 export const AnnouncementsProvider = ({ children }) => {
   const [announcements, setAnnouncements] = useState(null)
 
   const getAnnouncements = async () => {
     try {
-      const response = await fetch('http://localhost:5083/api/SecureWebsite/admin/announcement', { method: 'GET' })
+      const response = await fetch(`${apiUrl}/admin/announcement`, {
+        method: 'GET',
+      })
       setAnnouncements(await response.json())
     } catch (error) {
       throw new Error('Error ', error)
@@ -17,7 +21,7 @@ export const AnnouncementsProvider = ({ children }) => {
   const addAnnouncement = ({ content }) => {
     if (content) {
       try {
-        fetch('http://localhost:5083/api/SecureWebsite/admin/announcement', {
+        fetch(`${apiUrl}/admin/announcement`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -35,11 +39,7 @@ export const AnnouncementsProvider = ({ children }) => {
     getAnnouncements()
   }, [])
 
-  return <AnnouncementContext.Provider value={{ announcements, addAnnouncement }}>{children}</AnnouncementContext.Provider>
+  return <AnnouncementsContext.Provider value={{ announcements, addAnnouncement }}>{children}</AnnouncementsContext.Provider>
 }
 
-export const useAnnouncements = () => {
-  const context = useContext(AnnouncementContext)
-  if (!context) throw new Error('useAnnouncement should be wrapped in AnnouncementsProvider')
-  return context
-}
+export { AnnouncementsContext }
