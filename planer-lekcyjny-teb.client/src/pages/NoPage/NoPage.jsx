@@ -1,8 +1,10 @@
-import styled from '@emotion/styled'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-function ErrorPage() {
+import styles from './NoPage.module.css'
+
+
+function NoPage() {
   const [url, setUrl] = useState(String)
 
   const location = useLocation()
@@ -18,21 +20,12 @@ function ErrorPage() {
     setUrl(location.pathname.split('/')[1])
   }, [url, location])
 
-  const StyledDiv = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  `
-
   return (
-    <>
-      <StyledDiv>
+    <div className={styles.div}>
         <h1>Can I take your {url}?</h1>
         <h1>No its mine.</h1>
         <img src="https://media1.tenor.com/m/fcTjwtJ3ZysAAAAd/ibepoppingbottles-meme.gif" />
-      </StyledDiv>
-    </>
+    </div>
   )
 }
-export default ErrorPage
+export default NoPage

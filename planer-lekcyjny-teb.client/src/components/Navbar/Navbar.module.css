@@ -1,0 +1,30 @@
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav ul {
+  display: flex;
+  list-style-type: none;
+  gap: 10px;
+}
+
+.nav li {
+  min-width: 150px;
+  text-align: center;
+  font-size: 1.5rem;
+  background-color: white;
+  border-radius: 25px;
+  box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.15);
+
+  :hover {
+    transition: 0.15s ease-in-out;
+    font-weight: bolder;
+  }
+}
+
+.nav a {
+  text-decoration: none;
+  color: black;
+}

@@ -5,15 +5,16 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import { AuthProvider } from './hooks/authContext'
-import ErrorPage from './pages/NoPage'
+import NoPage from './pages/NoPage/NoPage'
 import Root from './pages/Root'
 import Test from './pages/Test'
+
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
-    errorElement: <ErrorPage />,
+    errorElement: <NoPage/>,
     children: [
       {
         path: 'chuje',
