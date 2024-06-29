@@ -1,5 +1,7 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
+import { AuthContext } from '../../hooks/authContext'
 import styles from './Navbar.module.css'
 
 const links = [
@@ -14,7 +16,7 @@ const adminLinks = [
 ]
 
 function Navbar() {
-  const isLogged = true
+  const { isLogged } = useContext(AuthContext)
 
   return (
     <nav className={styles.nav}>

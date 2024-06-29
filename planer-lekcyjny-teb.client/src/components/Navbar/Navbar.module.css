@@ -1,3 +1,5 @@
+/* FIXME for some reason there is like huge ass padding on a navbar */
+
 .nav {
   align-items: center;
   display: flex;
@@ -10,11 +12,12 @@
   gap: 10px;
   justify-content: center;
   list-style-type: none;
+  padding: 0;
 }
 
 .nav li {
   background-color: white;
-  border-radius: 25px;
+  border-radius: 20px;
   box-shadow: 0 3px 20px 0 rgb(0 0 0 / 15%);
   color: black;
   font-size: 1.5rem;

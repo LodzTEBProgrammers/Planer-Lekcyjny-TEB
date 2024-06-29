@@ -1,13 +1,11 @@
-import Navbar from '../components/Navbar/Navbar'
 import { useAuth } from '../hooks/useAuth'
 const Test = () => {
-  const { register } = useAuth()
+  const { register, login } = useAuth()
 
   return (
     <>
-    <Navbar />
       <h1 onClick={() => register('test', 'ciapibara@gmail.com', 'chujemujeDzikieW3ze>', 'Ciapibara')}>chujj</h1>
-      <h2>chuj2</h2>
+      <h1 onClick={() => login('ciapibara@gmail.com', 'chujemujeDzikieW3ze')}>chuj2</h1>
     </>
   )
 }
