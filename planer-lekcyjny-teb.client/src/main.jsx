@@ -5,24 +5,17 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import { AuthProvider } from './hooks/authContext'
-import NoPage from './pages/NoPage/NoPage'
-import Root from './pages/Root'
-import Test from './pages/Test'
-
+import { NoPage, Root, Test } from './pages/pages'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
-    errorElement: <NoPage/>,
+    errorElement: <NoPage />,
     children: [
       {
         path: 'chuje',
-        element: (
-          <AuthProvider>
-            <Test />
-          </AuthProvider>
-        ),
+        element: <Test />,
       },
     ],
   },
@@ -30,6 +23,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 )
