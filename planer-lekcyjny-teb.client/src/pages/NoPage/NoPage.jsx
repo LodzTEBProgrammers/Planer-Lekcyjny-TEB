@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import styles from './NoPage.module.css'
 
-
 function NoPage() {
   const [url, setUrl] = useState(String)
 
@@ -12,7 +11,7 @@ function NoPage() {
 
   useEffect(() => {
     setTimeout(() => {
-      return navigate('/chuj')
+      return navigate('/')
     }, 5000)
   })
 
@@ -22,9 +21,9 @@ function NoPage() {
 
   return (
     <div className={styles.div}>
-        <h1>Can I take your {url}?</h1>
-        <h1>No its mine.</h1>
-        <img src="https://media1.tenor.com/m/fcTjwtJ3ZysAAAAd/ibepoppingbottles-meme.gif" />
+      <h1>Can I take your {url}?</h1>
+      <h1>No its mine.</h1>
+      <img src="https://media1.tenor.com/m/fcTjwtJ3ZysAAAAd/ibepoppingbottles-meme.gif" />
     </div>
   )
 }

@@ -1,37 +1,44 @@
+import { Link } from 'react-router-dom'
+
 import styles from './Navbar.module.css'
 
+const links = [
+  { name: 'Home', to: '/' },
+  { name: 'Ogłoszenia', to: '/ogloszenia' },
+  { name: 'Login', to: '/login' },
+]
+
+const adminLinks = [
+  { name: 'Home', to: '/' },
+  { name: 'Admin', to: '/admin' },
+]
+
 function Navbar() {
-  const isLogged = false
+  const isLogged = true
 
   return (
     <nav className={styles.nav}>
-      {isLogged ? (
+      {/* Admin navbar */}
+      {isLogged && (
         <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/admin">Admin</a>
-          </li>
-          <li>
-            <a href="/plan-lekcji">Plan Lekcji</a>
-          </li>
-          <li>Log out</li>
+          {adminLinks.map((link, index) => (
+            <li key={index}>
+              <Link to={link.to}>{link.name}</Link>
+            </li>
+          ))}
+
+          <li style={{ color: '#ff0900' }}>Log out</li>
         </ul>
-      ) : (
+      )}
+
+      {/* No user navbar */}
+      {!isLogged && (
         <ul>
-          <li>
-            <a href="/login">Login</a>
-          </li>
-          <li>
-            <a href="/register">Register</a>
-          </li>
-          <li>
-            <a href="/plan-lekcji">Plan Lekcji</a>
-          </li>
-          <li>
-            <a href="/ogloszenia">Ogłoszenia</a>
-          </li>
+          {links.map((link, index) => (
+            <li key={index}>
+              <Link to={link.to}>{link.name}</Link>
+            </li>
+          ))}
         </ul>
       )}
     </nav>
